@@ -12,4 +12,4 @@ To use:
 
 `{"pat":"<your pat>"}`
 
-3. Run the script `python .\jira-biweekly.py --assignee <your username> --format csv"`
+3. Run the script `python .\jira-biweekly.py --assignee <your username> --format csv`
