@@ -3,7 +3,7 @@ Add the keywords:
 highlight:
 lowlight:
 
-to your comment on any Jira issue to include it in upcoming bi-weekly reports.
+to your comment on any Jira issue to generate content for the bi-weekly report.
 
 To use:
 ------------------
