@@ -63,9 +63,11 @@ def process_issues(issues, jira_server_url, pat):
                 participants.add(comment['author']['displayName'])
                 comment_body = comment['body']
                 if re.search(r'highlights?', comment_body, re.IGNORECASE):
-                    highlights.append(comment_body)
+                    clean_body = re.sub(r'\bhighlights?:\s*', '', comment_body, flags=re.IGNORECASE)
+                    highlights.append(clean_body)
                 elif re.search(r'lowlights?', comment_body, re.IGNORECASE):
-                    lowlights.append(comment_body)
+                    clean_body = re.sub(r'\blowlights?:\s*', '', comment_body, flags=re.IGNORECASE)
+                    lowlights.append(clean_body)
 
         # Include issue only if it has recent highlights or lowlights
         if highlights or lowlights:
