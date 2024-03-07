@@ -43,6 +43,15 @@ def process_issues(issues, jira_server_url, pat):
         participants.add(issue['fields']['reporter']['displayName'])
         if issue['fields']['assignee']:
             participants.add(issue['fields']['assignee']['displayName'])
+        
+        # Get and add watchers to participants
+        watchers_response = requests.get(
+            f'{jira_server_url}/rest/api/2/issue/{issue_key}/watchers',
+            headers={"Authorization": "Bearer " + pat}
+        )
+        watchers_data = watchers_response.json()
+        for watcher in watchers_data['watchers']:
+            participants.add(watcher['displayName'])
 
         # Get comments
         comments_response = requests.get(
