@@ -62,12 +62,19 @@ def process_issues(issues, jira_server_url, pat):
             if is_recent(comment['created']):
                 participants.add(comment['author']['displayName'])
                 comment_body = comment['body']
-                if re.search(r'highlights?', comment_body, re.IGNORECASE):
-                    clean_body = re.sub(r'\bhighlights?:\s*', '', comment_body, flags=re.IGNORECASE)
-                    highlights.append(clean_body)
-                elif re.search(r'lowlights?', comment_body, re.IGNORECASE):
-                    clean_body = re.sub(r'\blowlights?:\s*', '', comment_body, flags=re.IGNORECASE)
-                    lowlights.append(clean_body)
+                # Separate processing for highlights and lowlights within the same comment
+                highlight_matches = re.finditer(r'\bhighlight(?:s)?:\s*(.*?)\s*(?=\blowlight(?:s)?:|\Z)', comment_body, re.IGNORECASE | re.DOTALL)
+                lowlight_matches = re.finditer(r'\blowlight(?:s)?:\s*(.*?)\s*(?=\bhighlight(?:s)?:|\Z)', comment_body, re.IGNORECASE | re.DOTALL)
+                
+                for match in highlight_matches:
+                    clean_body = re.sub(r'\bhighlights?:\s*', '', match.group(0), flags=re.IGNORECASE).strip()
+                    if clean_body:
+                        highlights.append(clean_body)
+
+                for match in lowlight_matches:
+                    clean_body = re.sub(r'\blowlights?:\s*', '', match.group(0), flags=re.IGNORECASE).strip()
+                    if clean_body:
+                        lowlights.append(clean_body)
 
         # Include issue only if it has recent highlights or lowlights
         if highlights or lowlights:
